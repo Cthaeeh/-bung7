@@ -19,7 +19,7 @@ public class List {
 	}
 	
 	//Insert at Head
-	public ListItem insert(Object key){
+	public ListItem insert(DiGraphNode key){
 		//New Listelement 
 		size++;
 		ListItem element = new ListItem();

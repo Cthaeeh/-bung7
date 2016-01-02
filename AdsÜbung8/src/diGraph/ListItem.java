@@ -6,7 +6,7 @@ public class ListItem {
 	
 	//TEST 123
 	
-	Object key;
+	DiGraphNode key;
 	ListItem prev,next;
 	
 }

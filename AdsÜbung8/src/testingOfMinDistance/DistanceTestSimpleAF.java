@@ -7,7 +7,7 @@ import org.junit.Test;
 import diGraph.DiGraph;
 import diGraph.DiGraphNode;
 
-public class distanceTestSimpleAF {
+public class DistanceTestSimpleAF {
 	
 	
 	@Test
@@ -19,7 +19,6 @@ public class distanceTestSimpleAF {
 		
 		DiGraph test = new DiGraph();
 		
-		System.out.println("create Nodes");
 		test.addNode(testNodeOne);
 		test.addNode(testNodeTwo);
 		test.addNode(testNodeThree);
@@ -31,11 +30,8 @@ public class distanceTestSimpleAF {
 		DiGraphNode four = test.find(testNodeFour);
 		
 		//Add some edges (four is center of the graph)
-		System.out.println("add edge 1");
 		test.addEdge(one, four);
-		System.out.println("add edge 2");
 		test.addEdge(two, four);
-		System.out.println("add edge 3");
 		test.addEdge(three, four);
 		
 		//compute distance of 1 to 4 , 2 to 4 and 3 to 4 (should be 3)

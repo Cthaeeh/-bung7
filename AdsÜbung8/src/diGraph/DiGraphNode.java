@@ -3,11 +3,10 @@ package diGraph;
 public class DiGraphNode {
 	
 	Object key;							
-	List adjacencyList = new List();	//My Neighbor List
-	int sumOfDistances = 0; 			//Its very important that this is initialized with zero 	
+	List adjacencyList = new List();						//My Neighbor List
+	int sumOfDistances = 0; 								//Its very important that this is initialized with zero 	
 	
-	VISITORS recentVisitors = VISITORS.NONE;
-	
+	VISITORS visitorState = VISITORS.NONE;				//By default no Professor ever visited the node
 	
 	public enum VISITORS {									//by whom where they visited
 		 NONE, PROF_U, PROF_V, PROF_W, PROF_UV, PROF_UW, PROF_VW,
@@ -30,52 +29,60 @@ public class DiGraphNode {
 		return key;
 	}
 	
-	public VISITORS visit(VISITORS isVisitedBy, int walkingDistance){
-		System.out.println("I was visited by:" + recentVisitors.toString() + "  I am visited by " + isVisitedBy.toString()+ " he walked "+ walkingDistance +" My Name is " + key.toString());
+	
+	/**		Returns the visitorState( e.g. what Prof. visited ) after a visit by someone
+	 * 							
+	 * @param visitor		Who is visiting ?
+	 * @param walkDistOfVisitor	How far did he walk to get here ?
+	 * @return					visitorState e.g by whom this node was visited
+	 */
+	public VISITORS visit(VISITORS visitor, int walkDistOfVisitor){
+		//System.out.println("VisitorState:" + visitorState.toString() + "  Is visited by " + visitor.toString()+ " Distance Visitor walked "+ walkDistOfVisitor +" Name " + key.toString());
 		
-		if(recentVisitors==isVisitedBy) return null;		//Probably the most common case: The Professor visits one of his neighbor nodes again.
+		if(visitorState==visitor) return null;		//Probably the most common case: The Professor visits one of his neighbor nodes again.
 		
-		if(recentVisitors==VISITORS.NONE){
-			sumOfDistances+=walkingDistance;
-			return recentVisitors= isVisitedBy;
+		if(visitorState==VISITORS.NONE){			//Someone comes here first
+			sumOfDistances+=walkDistOfVisitor;
+			return visitorState= visitor;
+		}else{
+			
 		}
 		
 		//If we had one different Visitor before
-		if((recentVisitors==VISITORS.PROF_U && isVisitedBy == VISITORS.PROF_V) || (recentVisitors==VISITORS.PROF_V && isVisitedBy == VISITORS.PROF_U)){
+		if((visitorState==VISITORS.PROF_U && visitor == VISITORS.PROF_V) || (visitorState==VISITORS.PROF_V && visitor == VISITORS.PROF_U)){
 			DiGraph.intersectionStateUV=true;
-			sumOfDistances+=walkingDistance;
-			return recentVisitors = VISITORS.PROF_UV;
+			sumOfDistances+=walkDistOfVisitor;
+			return visitorState = VISITORS.PROF_UV;
 		}
-		if((recentVisitors==VISITORS.PROF_V && isVisitedBy == VISITORS.PROF_W) || (recentVisitors==VISITORS.PROF_W && isVisitedBy == VISITORS.PROF_V)){
-			sumOfDistances+=walkingDistance;
+		if((visitorState==VISITORS.PROF_V && visitor == VISITORS.PROF_W) || (visitorState==VISITORS.PROF_W && visitor == VISITORS.PROF_V)){
+			sumOfDistances+=walkDistOfVisitor;
 			DiGraph.intersectionStateVW=true;
-			return recentVisitors = VISITORS.PROF_VW;
+			return visitorState = VISITORS.PROF_VW;
 		}
-		if((recentVisitors==VISITORS.PROF_U && isVisitedBy == VISITORS.PROF_W) || (recentVisitors==VISITORS.PROF_W && isVisitedBy == VISITORS.PROF_U)){
-			sumOfDistances+=walkingDistance;
+		if((visitorState==VISITORS.PROF_U && visitor == VISITORS.PROF_W) || (visitorState==VISITORS.PROF_W && visitor == VISITORS.PROF_U)){
+			sumOfDistances+=walkDistOfVisitor;
 			DiGraph.intersectionStateUW=true;
-			return recentVisitors = VISITORS.PROF_UW;
+			return visitorState = VISITORS.PROF_UW;
 		}
 		
 		//If we had two visitors before but the new one was already there.
-		if((recentVisitors==VISITORS.PROF_UV && isVisitedBy == VISITORS.PROF_U) || (recentVisitors==VISITORS.PROF_UW && isVisitedBy == VISITORS.PROF_U)) return null;
-		if((recentVisitors==VISITORS.PROF_UV && isVisitedBy == VISITORS.PROF_V) || (recentVisitors==VISITORS.PROF_VW && isVisitedBy == VISITORS.PROF_V)) return null;
-		if((recentVisitors==VISITORS.PROF_VW && isVisitedBy == VISITORS.PROF_W) || (recentVisitors==VISITORS.PROF_UW && isVisitedBy == VISITORS.PROF_W)) return null;
+		if((visitorState==VISITORS.PROF_UV && visitor == VISITORS.PROF_U) || (visitorState==VISITORS.PROF_UW && visitor == VISITORS.PROF_U)) return null;
+		if((visitorState==VISITORS.PROF_UV && visitor == VISITORS.PROF_V) || (visitorState==VISITORS.PROF_VW && visitor == VISITORS.PROF_V)) return null;
+		if((visitorState==VISITORS.PROF_VW && visitor == VISITORS.PROF_W) || (visitorState==VISITORS.PROF_UW && visitor == VISITORS.PROF_W)) return null;
 		
 		//If we had two visitors before and the new one wasn´t already here (Thats what we want -> Profs should meet here)
-		if((recentVisitors==VISITORS.PROF_UV && isVisitedBy == VISITORS.PROF_W) || (recentVisitors==VISITORS.PROF_UW && isVisitedBy == VISITORS.PROF_V) 
-				|| (recentVisitors==VISITORS.PROF_VW && isVisitedBy == VISITORS.PROF_U)){
-			sumOfDistances+=walkingDistance;
+		if((visitorState==VISITORS.PROF_UV && visitor == VISITORS.PROF_W) || (visitorState==VISITORS.PROF_UW && visitor == VISITORS.PROF_V) 
+				|| (visitorState==VISITORS.PROF_VW && visitor == VISITORS.PROF_U)){
+			sumOfDistances+=walkDistOfVisitor;
+			
 			DiGraph.intersectionStateUV=true;
 			DiGraph.intersectionStateVW=true;
 			DiGraph.intersectionStateUW=true;
 			DiGraph.finalDistance= sumOfDistances;
-			System.out.println("I was visited by all" + key.toString());
-			return recentVisitors = VISITORS.ALL;
+			
+			return visitorState = VISITORS.ALL;
 		}
-
-		
-		return recentVisitors;		
+		return visitorState;		
 	}
 	
 }

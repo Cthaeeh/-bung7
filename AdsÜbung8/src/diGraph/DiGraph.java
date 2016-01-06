@@ -55,10 +55,7 @@ public class DiGraph {
 	}
 	
 	public void addEdge(DiGraphNode v1, DiGraphNode v2){
-			System.out.println("Insert an Edge");
-			v1.adjacencyList.insert(v2);	//If we have the Nodes v1,v2 in our graph save v2 in the adjacecncyList of v1
-
-		
+			v1.adjacencyList.insert(v2);	//If we have the Nodes v1,v2 in our graph save v2 in the adjacecncyList of v1		
 	}
 	
 	public DiGraphNode find(Object key){	
@@ -73,19 +70,19 @@ public class DiGraph {
 	}
 	
 	public int minDistance(DiGraphNode u,DiGraphNode v,DiGraphNode w){
-		int walkingDistanceU = 0,walkingDistanceV = 0,walkingDistanceW = 0 ;
-		int distance = 0;
+		int walkingDistanceU = 0,walkingDistanceV = 0,walkingDistanceW = 0;				//How far each Prof. walked 
+		int iterations = 0;
 		
 		uNeighborList.insert(u);
-		u.recentVisitors = VISITORS.PROF_U;
+		u.visitorState = VISITORS.PROF_U;
 		vNeighborList.insert(v);
-		v.recentVisitors = VISITORS.PROF_V;
+		v.visitorState = VISITORS.PROF_V;
 		wNeighborList.insert(w);
-		w.recentVisitors = VISITORS.PROF_W;
+		w.visitorState = VISITORS.PROF_W;
 		
-		while(distance <2*nodes.size){													//this loop is uglier than the night FIXME
+		while(iterations <2*nodes.size){													//this loop is uglier than the night FIXME
 			
-			walkingDistanceU++;													//each prof moves one edge forward (in every possible direction)
+			walkingDistanceU++;																//each prof moves one edge forward (in every possible direction)
 			uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
 			if(finalDistance > 0)return finalDistance;
 			walkingDistanceV++;
@@ -108,33 +105,32 @@ public class DiGraph {
 				walkingDistanceU++;
 				uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
 			}
-			if(finalDistance > 0)return finalDistance;
-			
-			distance++;
+			if(finalDistance > 0)return finalDistance;		
+			iterations++;
 		}
 		return -1;
 	}
-
-	private List getNeighbors(List neighborList, VISITORS visitor, int walkingDistance) {		
-		List newNeighborList = new List();															//This Method is uglier than the nigh FIXME 
+	
+	private List getNeighbors(List nodes, VISITORS visitor, int walkingDistance) {		
+		List newNeighborList = new List();														//This Method is uglier than the nigh FIXME (Idea: implement an iterator in list )
 		
-		ListItem neighbor = neighborList.getHead();													//Start with the head of the List				
-		while(neighbor != null){										 
-			DiGraphNode test = (DiGraphNode) neighbor.key;											//Get the key recent the node
+		ListItem node = nodes.getHead();																	
+		while(node != null){										 							//Iterate over nodes
+			DiGraphNode temp = node.key;											
 			
-			ListItem neighborOfNeighbor = test.adjacencyList.getHead();								//Start with the head of the List				
-			while(neighborOfNeighbor != null){							
-				System.out.println(visitor.toString());
-				if(neighborOfNeighbor.key.visit(visitor, walkingDistance)==null)break;
-				newNeighborList.insert(neighborOfNeighbor.key);				
-				neighborOfNeighbor = neighborOfNeighbor.next;										//Check the next node
+			ListItem neighborNode = temp.adjacencyList.getHead();								//Iterate over the neighbors of each of them				
+			while(neighborNode != null){							
+				if(neighborNode.key.visit(visitor, walkingDistance)==null)break;				//If the neighbor was already visited by this visitor (e.g. the visit returns null) then do nothing (break is for code optimization, not sure if this is also a Bug )
+				else{
+					newNeighborList.insert(neighborNode.key);									//Insert in the new neighbors list																								
+				}
+				neighborNode = neighborNode.next;												//Check the next node
 			}			
-			neighbor = neighbor.next;																//Check the next node
+			node = node.next;																	//Check the next node
 		}
-		
 		return newNeighborList;
 	}
-
+	
 	
 	
 	

@@ -6,15 +6,16 @@ import diGraph.DiGraphNode.VISITORS;
 	 * Gruppe 04
 	 * Aufgabe 4
 	 * Tim Appelt
+	 * 
+	 * 
 	 * u.
 	 * Kai Hofmann
 	 * Luft und Raumfahrtinformatik
 	 * 
-	 * 
 	 */
 
 public class DiGraph {
-	 
+	
 	final List nodes;	//A List of all my Nodes
 	List uNeighborList = new List();
 	List wNeighborList = new List();
@@ -31,19 +32,21 @@ public class DiGraph {
 	}
 	
 	public DiGraph(Object[] keys, boolean[][] adjacencyMatrix){		
-		nodes = new List();		
-		for(int k = 0;k<keys.length;k++){
-			keys[k] = new DiGraphNode(keys[k]);
+		nodes = new List();														//initialize global nodes List
+		DiGraphNode [] nodesAsArray = new DiGraphNode[keys.length]; 			//just local for handling the adjacencyMatrix (you can access a certain Node by Number)
+		
+		for(int k = 0;k<keys.length;k++){										//iterate over all keys and make nodes of them
+			DiGraphNode newNode = new DiGraphNode(keys[k]);
+			nodesAsArray[k] = newNode;
+			nodes.insert(newNode);
 		}
 		
-		for(int k = 0;k < keys.length;k++){					//Iterate over all keys
-			DiGraphNode temp = (DiGraphNode) keys[k];	//Create a Node for each of them			
+		for(int k = 0;k < nodesAsArray.length;k++){								//Iterate over all nodes		
 			for( int row = 0;row < keys.length;row++ ){		
-				if(adjacencyMatrix[k][row]==true){			//Then look in the Matrix if there is an arrow to another node	
-					temp.adjacencyList.insert((DiGraphNode) keys[row]);	//If so our Node saves that in its adjacency List
+				if(adjacencyMatrix[row][k]==true){								//Then look in the Matrix if there is an arrow to another node	
+					nodesAsArray[k].adjacencyList.insert(nodesAsArray[row]);	//If so our Node saves that in its adjacency List
 				}
 			}
-			this.nodes.insert(temp);						//Add the Node to the List of all my Nodes in the Graph
 		}
  	}
 
@@ -69,6 +72,13 @@ public class DiGraph {
 		return null;												
 	}
 	
+	/**	Computes the optimal meeting point for the three Nodes.
+	 * 
+	 * @param u	Node where prof U. lives
+	 * @param v Node where prof V. lives 
+	 * @param w Node where prof W. lives
+	 * @return the minimum distance ( u - meetingpoint ) + ( v - meetingpoint ) + ( w - meetingpoint )  
+	 */
 	public int minDistance(DiGraphNode u,DiGraphNode v,DiGraphNode w){
 		int walkingDistanceU = 0,walkingDistanceV = 0,walkingDistanceW = 0;				//How far each Prof. walked 
 		int iterations = 0;
@@ -111,6 +121,12 @@ public class DiGraph {
 		return -1;
 	}
 	
+	/**	searches all neighbor nodes of the handed nodes visits (and marks them as visited) them and returns them if they were not visited by this visitor before
+	 * @param nodes	the nodes ( already visited ) whose neighbors we visit
+	 * @param visitor 	the identity of the prof who is visiting.	
+	 * @param walkingDistance how far this visitor walked ( e.g. how far they are away from this prof. )
+	 * @return a List of Neighbors of nodes ( if they were not already visited by Visitor )
+	 */
 	private List getNeighbors(List nodes, VISITORS visitor, int walkingDistance) {		
 		List newNeighborList = new List();														//This Method is uglier than the nigh FIXME (Idea: implement an iterator in list )
 		

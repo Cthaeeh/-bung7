@@ -41,10 +41,10 @@ public class DiGraph {
 			nodes.insert(newNode);
 		}
 		
-		for(int k = 0;k < nodesAsArray.length;k++){								//Iterate over all nodes		
-			for( int row = 0;row < keys.length;row++ ){		
-				if(adjacencyMatrix[row][k]==true){								//Then look in the Matrix if there is an arrow to another node	
-					nodesAsArray[k].adjacencyList.insert(nodesAsArray[row]);	//If so our Node saves that in its adjacency List
+		for(int i = 0;i < nodesAsArray.length;i++){								//Iterate over all nodes		
+			for( int j = 0;j < nodesAsArray.length;j++ ){		
+				if(adjacencyMatrix[i][j]==true){								//Then look in the Matrix if there is an arrow to another node	
+					nodesAsArray[i].adjacencyList.insert(nodesAsArray[j]);	//If so our Node saves that in its adjacency List
 				}
 			}
 		}

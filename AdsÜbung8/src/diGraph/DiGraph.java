@@ -127,7 +127,7 @@ public class DiGraph {
 		return -1;
 	}
 	
-	private void resetGraph() {
+	public void resetGraph() {
 		uNeighborList.empty();
 		vNeighborList.empty();
 		wNeighborList.empty();	

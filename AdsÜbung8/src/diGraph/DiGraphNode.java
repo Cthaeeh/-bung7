@@ -37,7 +37,7 @@ public class DiGraphNode {
 	 * @return					visitorState e.g by whom this node was visited
 	 */
 	public VISITORS visit(VISITORS visitor, int walkDistOfVisitor){
-		System.out.println("VisitorState:" + visitorState.toString() + "  Is visited by " + visitor.toString()+ " Distance Visitor walked "+ walkDistOfVisitor +" Name " + key.toString());
+		//System.out.println("VisitorState:" + visitorState.toString() + "  Is visited by " + visitor.toString()+ " Distance Visitor walked "+ walkDistOfVisitor +" Name " + key.toString());
 		
 		if(visitorState==visitor) return null;		//Probably the most common case: The Professor visits one of his neighbor nodes again.
 		

@@ -88,23 +88,29 @@ public class DiGraph {
 		resetGraph();
 		
 		uNeighborList.insert(u);
-		u.visitorState = VISITORS.PROF_U;
+		u.visit(VISITORS.PROF_U, 0);
 		vNeighborList.insert(v);
-		v.visitorState = VISITORS.PROF_V;
+		v.visit(VISITORS.PROF_V, 0);
 		wNeighborList.insert(w);
-		w.visitorState = VISITORS.PROF_W;
+		w.visit(VISITORS.PROF_W, 0);
 		
 		while(iterations <2*nodes.size){													//this loop is uglier than the night FIXME
 			
 			if(intersectionStateUV&&(!intersectionStateUW)&&(!intersectionStateVW)){
 				walkingDistanceW++;
 				wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);
+				walkingDistanceW++;
+				wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);
 			}
 			if(intersectionStateUW&&(!intersectionStateUV)&&(!intersectionStateVW)){
 				walkingDistanceV++;
 				vNeighborList=getNeighbors(vNeighborList,VISITORS.PROF_V,walkingDistanceV);
+				walkingDistanceV++;
+				vNeighborList=getNeighbors(vNeighborList,VISITORS.PROF_V,walkingDistanceV);
 			}
 			if(intersectionStateVW&&(!intersectionStateUV)&&(!intersectionStateUW)){
+				walkingDistanceU++;
+				uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
 				walkingDistanceU++;
 				uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
 			}
@@ -117,10 +123,7 @@ public class DiGraph {
 			walkingDistanceW++;
 			wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);
 			
-			
-			
-			
-			
+					
 			if(finalDistance > 0)return finalDistance;				
 			iterations++;
 		}

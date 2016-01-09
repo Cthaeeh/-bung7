@@ -9,7 +9,7 @@ import java.lang.management.ThreadMXBean;
 import diGraph.DiGraph;
 import diGraph.DiGraphNode;
 
-public class TestU {
+public class SpeedTest2 {
 	
 	//<<<<<< PARAMETERS:
 	static int amount=10;	//how many different graphs will be generated

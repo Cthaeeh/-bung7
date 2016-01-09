@@ -10,7 +10,7 @@ import diGraph.DiGraphNode;
 public class DistanceTest3 {
 
 	@Test
-	public static void test() {
+	public void test() {
 		Integer one = 1, two = 2, three = 3, four= 4, five = 5, six = 6, seven = 7, eight = 8, nine =9, ten = 10, eleven = 11;
 		
 		DiGraph test = new DiGraph();

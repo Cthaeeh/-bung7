@@ -31,7 +31,8 @@ public class DiGraph {
 		nodes = new List();
 	}
 	
-	public DiGraph(Object[] keys, boolean[][] adjacencyMatrix){		
+	public DiGraph(Object[] keys, boolean[][] adjacencyMatrix){
+		
 		nodes = new List();														//initialize global nodes List
 		DiGraphNode [] nodesAsArray = new DiGraphNode[keys.length]; 			//just local for handling the adjacencyMatrix (you can access a certain Node by Number)
 		
@@ -43,12 +44,13 @@ public class DiGraph {
 		
 		for(int i = 0;i < nodesAsArray.length;i++){								//Iterate over all nodes		
 			for( int j = 0;j < nodesAsArray.length;j++ ){		
-				if(adjacencyMatrix[i][j]==true){								//Then look in the Matrix if there is an arrow to another node	
-					nodesAsArray[i].adjacencyList.insert(nodesAsArray[j]);	//If so our Node saves that in its adjacency List
+				if(adjacencyMatrix[i][j]){								//Then look in the Matrix if there is an arrow to another node	
+					addEdge(nodesAsArray[i],nodesAsArray[j]);	//If so our Node saves that in its adjacency List
 				}
 			}
 		}
  	}
+
 
 	//Methods
 	public DiGraphNode addNode(Object key){
@@ -83,6 +85,8 @@ public class DiGraph {
 		int walkingDistanceU = 0,walkingDistanceV = 0,walkingDistanceW = 0;				//How far each Prof. walked 
 		int iterations = 0;
 		
+		resetGraph();
+		
 		uNeighborList.insert(u);
 		u.visitorState = VISITORS.PROF_U;
 		vNeighborList.insert(v);
@@ -92,34 +96,56 @@ public class DiGraph {
 		
 		while(iterations <2*nodes.size){													//this loop is uglier than the night FIXME
 			
-			walkingDistanceU++;																//each prof moves one edge forward (in every possible direction)
-			uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
-			if(finalDistance > 0)return finalDistance;
-			walkingDistanceV++;
-			vNeighborList=getNeighbors(vNeighborList,VISITORS.PROF_V,walkingDistanceV);
-			if(finalDistance > 0)return finalDistance;
-			walkingDistanceW++;
-			wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);
-			if(finalDistance > 0)return finalDistance;
 			if(intersectionStateUV&&(!intersectionStateUW)&&(!intersectionStateVW)){
 				walkingDistanceW++;
 				wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);
 			}
-			if(finalDistance > 0)return finalDistance;
 			if(intersectionStateUW&&(!intersectionStateUV)&&(!intersectionStateVW)){
 				walkingDistanceV++;
 				vNeighborList=getNeighbors(vNeighborList,VISITORS.PROF_V,walkingDistanceV);
 			}
-			if(finalDistance > 0)return finalDistance;
 			if(intersectionStateVW&&(!intersectionStateUV)&&(!intersectionStateUW)){
 				walkingDistanceU++;
 				uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
 			}
-			if(finalDistance > 0)return finalDistance;		
+			
+			
+			walkingDistanceU++;																//each prof moves one edge forward (in every possible direction)
+			uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
+			walkingDistanceV++;
+			vNeighborList=getNeighbors(vNeighborList,VISITORS.PROF_V,walkingDistanceV);
+			walkingDistanceW++;
+			wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);
+			
+			
+			
+			
+			
+			if(finalDistance > 0)return finalDistance;				
 			iterations++;
 		}
 		return -1;
 	}
+	
+	private void resetGraph() {
+		uNeighborList.empty();
+		vNeighborList.empty();
+		wNeighborList.empty();	
+		
+		finalDistance = 0;
+		
+		intersectionStateUV = intersectionStateUW = intersectionStateVW = false;
+		
+		ListItem temp = nodes.getHead();
+			while(temp != null){
+				DiGraphNode node = temp.key;
+				node.visitorState = VISITORS.NONE;
+				node.sumOfDistances = 0;
+				temp = temp.next;
+			}
+		
+	}
+	
 	
 	/**	searches all neighbor nodes of the handed nodes visits (and marks them as visited) them and returns them if they were not visited by this visitor before
 	 * @param nodes	the nodes ( already visited ) whose neighbors we visit
@@ -136,7 +162,7 @@ public class DiGraph {
 			
 			ListItem neighborNode = temp.adjacencyList.getHead();								//Iterate over the neighbors of each of them				
 			while(neighborNode != null){							
-				if(neighborNode.key.visit(visitor, walkingDistance)==null)break;				//If the neighbor was already visited by this visitor (e.g. the visit returns null) then do nothing (break is for code optimization, not sure if this is also a Bug )
+				if(neighborNode.key.visit(visitor, walkingDistance)==null);				//If the neighbor was already visited by this visitor (e.g. the visit returns null) then do nothing (break is for code optimization, not sure if this is also a Bug )
 				else{
 					newNeighborList.insert(neighborNode.key);									//Insert in the new neighbors list																								
 				}
@@ -146,6 +172,7 @@ public class DiGraph {
 		}
 		return newNeighborList;
 	}
+	
 	
 	
 	

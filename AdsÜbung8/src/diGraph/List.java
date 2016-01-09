@@ -65,5 +65,13 @@ public class List {
 		}
 		
 	}
+	/**
+	 * creates an empty List , e.g. deletes evrything
+	 */
+	public void empty() {
+		head = tail = null;
+		
+	}
+
 	
 }

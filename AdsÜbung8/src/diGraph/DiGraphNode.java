@@ -37,7 +37,7 @@ public class DiGraphNode {
 	 * @return					visitorState e.g by whom this node was visited
 	 */
 	public VISITORS visit(VISITORS visitor, int walkDistOfVisitor){
-		//System.out.println("VisitorState:" + visitorState.toString() + "  Is visited by " + visitor.toString()+ " Distance Visitor walked "+ walkDistOfVisitor +" Name " + key.toString());
+		System.out.println("VisitorState:" + visitorState.toString() + "  Is visited by " + visitor.toString()+ " Distance Visitor walked "+ walkDistOfVisitor +" Name " + key.toString());
 		
 		if(visitorState==visitor) return null;		//Probably the most common case: The Professor visits one of his neighbor nodes again.
 		
@@ -70,7 +70,7 @@ public class DiGraphNode {
 		if((visitorState==VISITORS.PROF_UV && visitor == VISITORS.PROF_V) || (visitorState==VISITORS.PROF_VW && visitor == VISITORS.PROF_V)) return null;
 		if((visitorState==VISITORS.PROF_VW && visitor == VISITORS.PROF_W) || (visitorState==VISITORS.PROF_UW && visitor == VISITORS.PROF_W)) return null;
 		
-		//If we had two visitors before and the new one wasn´t already here (Thats what we want -> Profs should meet here)
+		//If we had two visitors before and the new one wasnï¿½t already here (Thats what we want -> Profs should meet here)
 		if((visitorState==VISITORS.PROF_UV && visitor == VISITORS.PROF_W) || (visitorState==VISITORS.PROF_UW && visitor == VISITORS.PROF_V) 
 				|| (visitorState==VISITORS.PROF_VW && visitor == VISITORS.PROF_U)){
 			sumOfDistances+=walkDistOfVisitor;
@@ -78,7 +78,7 @@ public class DiGraphNode {
 			DiGraph.intersectionStateUV=true;
 			DiGraph.intersectionStateVW=true;
 			DiGraph.intersectionStateUW=true;
-			DiGraph.finalDistance= sumOfDistances;
+			if(DiGraph.finalDistance == 0 || DiGraph.finalDistance > sumOfDistances) DiGraph.finalDistance = sumOfDistances;
 			
 			return visitorState = VISITORS.ALL;
 		}

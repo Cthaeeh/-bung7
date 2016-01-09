@@ -13,7 +13,7 @@ public class SpeedTest {
 		long startUserTimeNano   = getUserTime( );
 		for(int i = 0; i< 1000000;i++){
 			//DistanceTest.test();
-			DistanceTest3.test();
+			//DistanceTest3.test();
 		}
 		
 		System.out.println("Time it took in ms: "+(getUserTime( ) - startUserTimeNano)/1000000);

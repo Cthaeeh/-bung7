@@ -2,12 +2,10 @@ package diGraph;
 
 import diGraph.DiGraphNode.VISITORS;
 
-	/* 16.12.2015
+	/* 09.01.2015
 	 * Gruppe 04
 	 * Aufgabe 4
 	 * Tim Appelt
-	 * 
-	 * 
 	 * u.
 	 * Kai Hofmann
 	 * Luft und Raumfahrtinformatik
@@ -17,10 +15,14 @@ import diGraph.DiGraphNode.VISITORS;
 public class DiGraph {
 	
 	final List nodes;	//A List of all my Nodes
+	
 	List uNeighborList = new List();
 	List wNeighborList = new List();
 	List vNeighborList = new List();
+	
 	static int finalDistance = 0;
+	boolean resetState = false;
+	int edgeCount = 0;
 	
 	static boolean intersectionStateUV = false;
 	static boolean intersectionStateUW = false;
@@ -31,21 +33,20 @@ public class DiGraph {
 		nodes = new List();
 	}
 	
-	public DiGraph(Object[] keys, boolean[][] adjacencyMatrix){
-		
+	public DiGraph(Object[] keys, boolean[][] adjacencyMatrix){		
 		nodes = new List();														//initialize global nodes List
-		DiGraphNode [] nodesAsArray = new DiGraphNode[keys.length]; 			//just local for handling the adjacencyMatrix (you can access a certain Node by Number)
-		
+		DiGraphNode [] nodesArray = new DiGraphNode[keys.length]; 				//just local for handling the adjacencyMatrix (you can access a certain Node by Number)
+
 		for(int k = 0;k<keys.length;k++){										//iterate over all keys and make nodes of them
 			DiGraphNode newNode = new DiGraphNode(keys[k]);
-			nodesAsArray[k] = newNode;
+			nodesArray[k] = newNode;
 			nodes.insert(newNode);
 		}
 		
-		for(int i = 0;i < nodesAsArray.length;i++){								//Iterate over all nodes		
-			for( int j = 0;j < nodesAsArray.length;j++ ){		
-				if(adjacencyMatrix[i][j]){								//Then look in the Matrix if there is an arrow to another node	
-					addEdge(nodesAsArray[i],nodesAsArray[j]);	//If so our Node saves that in its adjacency List
+		for(int i = 0;i < nodesArray.length;i++){								//Iterate over all nodes		
+			for( int j = 0;j < nodesArray.length;j++ ){		
+				if(adjacencyMatrix[i][j]){										//Then look in the Matrix if there is an edge to another node	
+					addEdge(nodesArray[i],nodesArray[j]);						//If so create that edge
 				}
 			}
 		}
@@ -61,6 +62,7 @@ public class DiGraph {
 	
 	public void addEdge(DiGraphNode v1, DiGraphNode v2){
 			v1.adjacencyList.insert(v2);	//If we have the Nodes v1,v2 in our graph save v2 in the adjacecncyList of v1		
+			edgeCount++;
 	}
 	
 	public DiGraphNode find(Object key){	
@@ -74,7 +76,7 @@ public class DiGraph {
 		return null;												
 	}
 	
-	/**	Computes the optimal meeting point for the three Nodes.
+	/**	Computes the best meeting point for the three Nodes.
 	 * 
 	 * @param u	Node where prof U. lives
 	 * @param v Node where prof V. lives 
@@ -83,9 +85,11 @@ public class DiGraph {
 	 */
 	public int minDistance(DiGraphNode u,DiGraphNode v,DiGraphNode w){
 		int walkingDistanceU = 0,walkingDistanceV = 0,walkingDistanceW = 0;				//How far each Prof. walked 
-		int iterations = 0;
 		
-		resetGraph();
+		if(resetState){
+			resetGraph();
+			resetState = true;
+		}
 		
 		uNeighborList.insert(u);
 		u.visit(VISITORS.PROF_U, 0);
@@ -94,7 +98,7 @@ public class DiGraph {
 		wNeighborList.insert(w);
 		w.visit(VISITORS.PROF_W, 0);
 		
-		while(iterations <2*nodes.size){													//this loop is uglier than the night FIXME
+		while(walkingDistanceU + walkingDistanceV + walkingDistanceW < edgeCount){													//this loop is uglier than the night FIXME
 			
 			if(intersectionStateUV&&(!intersectionStateUW)&&(!intersectionStateVW)){
 				walkingDistanceW++;
@@ -125,7 +129,6 @@ public class DiGraph {
 			
 					
 			if(finalDistance > 0)return finalDistance;				
-			iterations++;
 		}
 		return -1;
 	}
@@ -135,18 +138,16 @@ public class DiGraph {
 		vNeighborList.empty();
 		wNeighborList.empty();	
 		
-		finalDistance = 0;
-		
+		finalDistance = 0;		
 		intersectionStateUV = intersectionStateUW = intersectionStateVW = false;
 		
 		ListItem temp = nodes.getHead();
-			while(temp != null){
-				DiGraphNode node = temp.key;
-				node.visitorState = VISITORS.NONE;
-				node.sumOfDistances = 0;
-				temp = temp.next;
-			}
-		
+		while(temp != null){
+			DiGraphNode node = temp.key;
+			node.visitorState = VISITORS.NONE;
+			node.sumOfDistances = 0;
+			temp = temp.next;
+		}
 	}
 	
 	

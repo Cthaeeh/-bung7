@@ -118,17 +118,16 @@ public class DiGraph {
 				walkingDistanceU++;
 				uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
 			}
-			
-			
+						
 			walkingDistanceU++;																//each prof moves one edge forward (in every possible direction)
 			uNeighborList=getNeighbors(uNeighborList,VISITORS.PROF_U,walkingDistanceU);
 			walkingDistanceV++;
 			vNeighborList=getNeighbors(vNeighborList,VISITORS.PROF_V,walkingDistanceV);
 			walkingDistanceW++;
 			wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);
-			
-					
-			if(finalDistance > 0)return finalDistance;				
+								
+			if(finalDistance > 0)return finalDistance;
+			if(uNeighborList.isEmpty() && vNeighborList.isEmpty() && wNeighborList.isEmpty()) break;
 		}
 		return -1;
 	}
@@ -158,7 +157,7 @@ public class DiGraph {
 	 * @return a List of Neighbors of nodes ( if they were not already visited by Visitor )
 	 */
 	private List getNeighbors(List nodes, VISITORS visitor, int walkingDistance) {		
-		List newNeighborList = new List();														//This Method is uglier than the nigh FIXME (Idea: implement an iterator in list )
+		List newNeighborList = new List();														//This Method is uglier than the nigh (Idea: implement an iterator in list )
 		
 		ListItem node = nodes.getHead();																	
 		while(node != null){										 							//Iterate over nodes
@@ -166,7 +165,7 @@ public class DiGraph {
 			
 			ListItem neighborNode = temp.adjacencyList.getHead();								//Iterate over the neighbors of each of them				
 			while(neighborNode != null){							
-				if(neighborNode.key.visit(visitor, walkingDistance)==null);				//If the neighbor was already visited by this visitor (e.g. the visit returns null) then do nothing (break is for code optimization, not sure if this is also a Bug )
+				if(neighborNode.key.visit(visitor, walkingDistance)==null);				//If the neighbor was already visited by this visitor (e.g. the visit returns null) then do nothing 
 				else{
 					newNeighborList.insert(neighborNode.key);									//Insert in the new neighbors list																								
 				}

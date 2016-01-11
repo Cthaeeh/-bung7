@@ -2,16 +2,6 @@ package diGraph;
 
 import diGraph.DiGraphNode.VISITORS;
 
-	/* 09.01.2015
-	 * Gruppe 04
-	 * Aufgabe 4
-	 * Tim Appelt
-	 * u.
-	 * Kai Hofmann
-	 * Luft und Raumfahrtinformatik
-	 * 
-	 */
-
 public class DiGraph {
 	
 	final List nodes;							//A list of all nodes in the graph
@@ -105,8 +95,7 @@ public class DiGraph {
 		wNeighborList.insert(w);
 		w.visit(VISITORS.PROF_W, 0);
 		
-		while(walkingDistanceU + walkingDistanceV + walkingDistanceW < edgeCount){			// I know this loop is kind of ugly, but I hope it is fast.
-			
+		while(!(uNeighborList.isEmpty() && vNeighborList.isEmpty() && wNeighborList.isEmpty())){			// I know this loop is kind of ugly, but I hope it is fast.			
 			if(intersectionStateUV&&(!intersectionStateUW)&&(!intersectionStateVW)){		//If just U and V intersected W must walk faster 
 				walkingDistanceW++;
 				wNeighborList=getNeighbors(wNeighborList,VISITORS.PROF_W,walkingDistanceW);	//W moves two edge forward (in every possible direction)

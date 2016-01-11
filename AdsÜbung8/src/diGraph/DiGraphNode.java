@@ -28,7 +28,10 @@ public class DiGraphNode {
 	public Object getKey(){
 		return key;
 	}
-		
+	
+	
+	//SPLIT THIS INTO 3 METHODS
+	
 	/**		Returns the visitorState( e.g. what Prof. visited ) after a visit by someone
 	 * 		
 	 * 		If someone was already there nothing changes and we return null

@@ -2,8 +2,7 @@ package diGraph;
 
 public class ListItem {
 	
-	//trivial
-	
+	//trivial	
 	DiGraphNode key;
 	ListItem prev,next;
 	
